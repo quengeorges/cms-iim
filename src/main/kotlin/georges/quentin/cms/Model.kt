@@ -7,4 +7,6 @@ interface Model {
     fun getArticleList(): List<Article>
 
     fun getArticle(id: Int): Article?
+
+    fun createComment(content:String?, article_id: Int): Boolean
 }
