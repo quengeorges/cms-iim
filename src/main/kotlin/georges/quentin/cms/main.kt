@@ -90,6 +90,11 @@ fun main() {
                 controller.login(mail, password)
             }
 
+            get("/logout") {
+                call.sessions.clear("AUTH_COOKIE")
+                call.respondRedirect("/")
+            }
+
             get("/admin") {
 
             }
