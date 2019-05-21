@@ -2,6 +2,7 @@ package georges.quentin.cms
 
 import georges.quentin.cms.model.Article
 import georges.quentin.cms.model.Comment
+import georges.quentin.cms.model.User
 
 class MysqlModel(val pool: ConnectionPool) : Model {
 
@@ -71,6 +72,27 @@ class MysqlModel(val pool: ConnectionPool) : Model {
                             result.getString("text"),
                             getComments(result.getInt("id"))
                         )
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    override fun getUser(mail: String, password: String): User? {
+        pool.useConnection { connection ->
+            connection.prepareStatement("SELECT * FROM users WHERE mail = ? AND password = ?").use { stmt ->
+                stmt.setString(1, mail)
+                stmt.setString(2, password)
+
+                stmt.executeQuery().use { result ->
+                    return if(result.next()) {
+                        User(
+                            result.getString("mail"),
+                            result.getString("password")
+                        )
+                    } else {
+                        null
                     }
                 }
             }

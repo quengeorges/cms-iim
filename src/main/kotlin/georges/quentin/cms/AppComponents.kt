@@ -2,6 +2,7 @@ package georges.quentin.cms
 
 import georges.quentin.cms.control.ArticlePresenterImpl
 import georges.quentin.cms.control.ArticleListPresenterImpl
+import georges.quentin.cms.control.AuthControllerImpl
 import georges.quentin.cms.control.CommentControllerImpl
 
 class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPassword: String) {
@@ -28,5 +29,9 @@ class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPasswo
 
     fun createComment(view: CommentController.View): CommentController {
         return CommentControllerImpl(getModel(), view)
+    }
+
+    fun login(view: AuthController.View): AuthController {
+        return AuthControllerImpl(getModel(), view)
     }
 }

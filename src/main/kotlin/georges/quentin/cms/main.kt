@@ -2,6 +2,8 @@ package georges.quentin.cms
 
 import freemarker.cache.ClassTemplateLoader
 import georges.quentin.cms.model.Article
+import georges.quentin.cms.model.AuthSession
+import georges.quentin.cms.model.User
 import georges.quentin.cms.tpl.IndexContext
 import io.ktor.application.call
 import io.ktor.application.install
@@ -19,6 +21,7 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.sessions.*
 import kotlinx.coroutines.launch
 
 class App
@@ -31,6 +34,12 @@ fun main() {
 
         install(FreeMarker) {
             templateLoader = ClassTemplateLoader(App::class.java.classLoader, "templates")
+        }
+
+        install(Sessions) {
+            cookie<AuthSession>("AUTH_COOKIE") {
+                cookie.path = "/"
+            }
         }
 
         routing {
@@ -48,6 +57,37 @@ fun main() {
                     }
                 })
                 controller.start()
+            }
+
+            get("/login") {
+                call.respond(FreeMarkerContent("login.ftl", null, "e"))
+            }
+            post("/login") {
+                val requestBody = call.receiveParameters()
+                val mail = requestBody["mail"]
+                val password = requestBody["password"]
+                val endSession = System.currentTimeMillis() + 600000;
+
+                val controller =appComponents.login(object: AuthController.View {
+                    override fun success(user: User) {
+                        launch {
+                            call.sessions.set(AuthSession(user.mail, endSession))
+
+                            if(call.sessions.get<AuthSession>() != null) {
+                                call.respondRedirect("/")
+                            } else {
+                                call.respondText{ "Something wrong happened"}
+                            }
+                        }
+                    }
+
+                    override fun error() {
+                        launch {
+                            call.respondText { "Invalid credentials "}
+                        }
+                    }
+                })
+                controller.login(mail, password)
             }
 
             get("/admin") {
