@@ -10,7 +10,7 @@ class PresenterTests {
 
     @Test
     fun testArticleListPresenter(){
-        val list = listOf(Article(1, "un", null), Article(2, "deux", null))
+        val list = listOf(Article(1, "un", null, null), Article(2, "deux", null, null))
 
         val model = mock<Model> {
             on { getArticleList() } doReturn list
@@ -28,7 +28,7 @@ class PresenterTests {
 
     @Test
     fun testArticlePresenter(){
-        val article = Article(1, "un", null)
+        val article = Article(1, "un", null, null)
 
         val model = mock<Model> {
             on { getArticle(1) } doReturn article

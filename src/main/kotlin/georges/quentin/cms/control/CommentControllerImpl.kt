@@ -4,9 +4,9 @@ import georges.quentin.cms.CommentController
 import georges.quentin.cms.Model
 
 class CommentControllerImpl(val model: Model, val view: CommentController.View): CommentController {
-    override fun createComment(content: String?, article_id: Int) {
+    override fun createComment(content: String?, articleId: Int) {
         if (content != "") {
-            val comment = model.createComment(content, article_id)
+            val comment = model.createComment(content, articleId)
             if (comment && content != "") {
                 view.success()
             } else {

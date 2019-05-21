@@ -1,6 +1,7 @@
 package georges.quentin.cms
 
 import georges.quentin.cms.model.Article
+import georges.quentin.cms.model.Comment
 
 interface Model {
 
@@ -8,5 +9,7 @@ interface Model {
 
     fun getArticle(id: Int): Article?
 
-    fun createComment(content:String?, article_id: Int): Boolean
+    fun createComment(content:String?, articleId: Int): Boolean
+
+    fun getComments(articleId: Int): List<Comment>
 }

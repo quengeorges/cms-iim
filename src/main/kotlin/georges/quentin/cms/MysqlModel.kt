@@ -1,6 +1,7 @@
 package georges.quentin.cms
 
 import georges.quentin.cms.model.Article
+import georges.quentin.cms.model.Comment
 
 class MysqlModel(val pool: ConnectionPool) : Model {
 
@@ -16,6 +17,26 @@ class MysqlModel(val pool: ConnectionPool) : Model {
         return false
     }
 
+    override fun getComments(articleId: Int): List<Comment> {
+        val list = ArrayList<Comment>()
+        pool.useConnection { connection ->
+            connection.prepareStatement("SELECT id, text, idArticle FROM commentaire WHERE idArticle= ?").use { stmt ->
+                stmt.setInt(1, articleId)
+
+                stmt.executeQuery().use {result ->
+                    while(result.next()) {
+                        list += Comment(
+                            result.getInt("id"),
+                            result.getString("text"),
+                            result.getInt("idArticle")
+                        )
+                    }
+                }
+            }
+        }
+        return list
+    }
+
     override fun getArticleList(): List<Article> {
         val list = ArrayList<Article>()
 
@@ -26,6 +47,7 @@ class MysqlModel(val pool: ConnectionPool) : Model {
                         list += Article(
                             result.getInt("id"),
                             result.getString("title"),
+                            null,
                             null
                         )
                     }
@@ -46,7 +68,8 @@ class MysqlModel(val pool: ConnectionPool) : Model {
                         return Article(
                             result.getInt("id"),
                             result.getString("title"),
-                            result.getString("text")
+                            result.getString("text"),
+                            getComments(result.getInt("id"))
                         )
                     }
                 }

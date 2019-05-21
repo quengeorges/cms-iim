@@ -64,6 +64,7 @@ fun main() {
 
                     override fun displayArticle(article: Article?) {
                         launch {
+                            print(article?.comments)
                             call.respond(FreeMarkerContent("article.ftl", article, "e"))
                         }
                     }

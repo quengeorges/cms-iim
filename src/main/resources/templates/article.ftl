@@ -12,6 +12,12 @@
         <input type="hidden" value="${id}" name="article_id">
         <button type="submit">Ajouter</button>
     </form>
+
+    <ul>
+        <#list comments as comment>
+            <li>${comment.content}</li>
+        </#list>
+    </ul>
 </#macro>
 
 <@display_page/>
