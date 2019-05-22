@@ -7,7 +7,7 @@ class CommentControllerImpl(val model: Model, val view: CommentController.View):
     override fun createComment(content: String?, articleId: Int) {
         if (content != "") {
             val comment = model.createComment(content, articleId)
-            if (comment && content != "") {
+            if (comment) {
                 view.success()
             } else {
                 view.error()

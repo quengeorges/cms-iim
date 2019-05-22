@@ -99,4 +99,27 @@ class MysqlModel(val pool: ConnectionPool) : Model {
         }
         return null
     }
+
+    override fun deleteArticle(id: Int): Boolean {
+        pool.useConnection { connection ->
+            connection.prepareStatement("DELETE FROM articles WHERE id = ?").use { stmt ->
+                stmt.setInt(1, id)
+                stmt.executeUpdate()
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun createArticle(title: String, content: String): Boolean {
+        pool.useConnection { connection ->
+            connection.prepareStatement("INSERT INTO articles (title, text) VALUES (?, ?)").use { stmt ->
+                stmt.setString(1, title)
+                stmt.setString(2, content)
+                stmt.executeUpdate()
+                return true
+            }
+        }
+        return false
+    }
 }

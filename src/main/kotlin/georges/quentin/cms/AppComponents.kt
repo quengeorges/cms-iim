@@ -1,9 +1,6 @@
 package georges.quentin.cms
 
-import georges.quentin.cms.control.ArticlePresenterImpl
-import georges.quentin.cms.control.ArticleListPresenterImpl
-import georges.quentin.cms.control.AuthControllerImpl
-import georges.quentin.cms.control.CommentControllerImpl
+import georges.quentin.cms.control.*
 
 class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPassword: String) {
 
@@ -23,7 +20,7 @@ class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPasswo
         return ArticleListPresenterImpl(getModel(), view)
     }
 
-    fun getArticlePresenterr(view: ArticlePresenter.View): ArticlePresenter {
+    fun getArticlePresenter(view: ArticlePresenter.View): ArticlePresenter {
         return ArticlePresenterImpl(getModel(), view)
     }
 
@@ -33,5 +30,9 @@ class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPasswo
 
     fun login(view: AuthController.View): AuthController {
         return AuthControllerImpl(getModel(), view)
+    }
+
+    fun getArticleController(view: ArticleController.View): ArticleController {
+        return ArticleControllerImpl(getModel(), view)
     }
 }

@@ -52,7 +52,11 @@ fun main() {
                     override fun dispalyArticleList(list: List<Article>) {
                         val context = IndexContext(list)
                         launch {
-                            call.respond(FreeMarkerContent("index.ftl", context, "e"))
+                            if (call.sessions.get<AuthSession>() != null) {
+                                call.respond(FreeMarkerContent("admin/index_admin.ftl", context, "e"))
+                            } else {
+                                call.respond(FreeMarkerContent("index.ftl", context, "e"))
+                            }
                         }
                     }
                 })
@@ -76,7 +80,7 @@ fun main() {
                             if(call.sessions.get<AuthSession>() != null) {
                                 call.respondRedirect("/")
                             } else {
-                                call.respondText{ "Something wrong happened"}
+                                call.respondText("Something wrong happened")
                             }
                         }
                     }
@@ -95,12 +99,54 @@ fun main() {
                 call.respondRedirect("/")
             }
 
-            get("/admin") {
+            get("/admin/article/form") {
+                call.respond(FreeMarkerContent("admin/article_admin_form.ftl", null, "e"))
+            }
 
+            post("/admin/article/add") {
+                val requestBody = call.receiveParameters()
+                val title = requestBody["title"]
+                val content = requestBody["content"]
+
+                val controller = appComponents.getArticleController(object: ArticleController.View {
+                    override fun success() {
+                        launch {
+                            call.respondRedirect("/")
+                        }
+                    }
+
+                    override fun error() {
+                        launch {
+                            call.respondText("Something wrong happened")
+                        }
+                    }
+
+                })
+
+                controller.createArticle(title, content)
+            }
+
+            get("/admin/article/del/{id}") {
+                val controller = appComponents.getArticleController(object: ArticleController.View {
+                    override fun success() {
+                        launch {
+                            call.respondRedirect("/")
+                        }
+                    }
+
+                    override fun error() {
+                        launch {
+                            call.respondText("Something wrong happened")
+                        }
+                    }
+                })
+
+                val id = call.parameters["id"]!!.toInt()
+                controller.deleteArticle(id)
             }
 
             get("article/{id}") {
-                val controller = appComponents.getArticlePresenterr(object: ArticlePresenter.View {
+                val controller = appComponents.getArticlePresenter(object: ArticlePresenter.View {
                     override fun displayNotFound() {
                         launch {
                             call.respond(HttpStatusCode.NotFound)
@@ -109,7 +155,6 @@ fun main() {
 
                     override fun displayArticle(article: Article?) {
                         launch {
-                            print(article?.comments)
                             call.respond(FreeMarkerContent("article.ftl", article, "e"))
                         }
                     }

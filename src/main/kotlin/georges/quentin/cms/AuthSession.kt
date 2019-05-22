@@ -1,2 +1,0 @@
-package georges.quentin.cms
-

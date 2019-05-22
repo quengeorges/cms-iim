@@ -15,4 +15,8 @@ interface Model {
     fun getComments(articleId: Int): List<Comment>
 
     fun getUser(mail: String, password: String): User?
+
+    fun deleteArticle(id: Int): Boolean
+
+    fun createArticle(title: String, content: String): Boolean
 }
