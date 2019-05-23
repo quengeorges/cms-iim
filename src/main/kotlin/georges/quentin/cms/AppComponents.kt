@@ -24,15 +24,11 @@ class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPasswo
         return ArticlePresenterImpl(getModel(), view)
     }
 
-    fun getCommentController(view: CommentController.View): CommentController {
-        return CommentControllerImpl(getModel(), view)
+    fun getCommentController(view: CommentPresenter.View): CommentPresenter {
+        return CommentPresenterImpl(getModel(), view)
     }
 
-    fun login(view: AuthController.View): AuthController {
-        return AuthControllerImpl(getModel(), view)
-    }
-
-    fun getArticleController(view: ArticleController.View): ArticleController {
-        return ArticleControllerImpl(getModel(), view)
+    fun login(view: AuthPresenter.View): AuthPresenter {
+        return AuthPresenterImpl(getModel(), view)
     }
 }

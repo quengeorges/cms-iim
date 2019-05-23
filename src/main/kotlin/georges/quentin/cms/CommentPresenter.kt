@@ -1,6 +1,6 @@
 package georges.quentin.cms
 
-interface CommentController {
+interface CommentPresenter {
 
     fun createComment(content: String?, articleId: Int)
 

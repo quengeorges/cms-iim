@@ -42,13 +42,13 @@ class MysqlModel(val pool: ConnectionPool) : Model {
         val list = ArrayList<Article>()
 
         pool.useConnection { connection ->
-            connection.prepareStatement("SELECT id, title FROM articles").use { stmt ->
+            connection.prepareStatement("SELECT id, title, text FROM articles").use { stmt ->
                 stmt.executeQuery().use { result ->
                     while (result.next()) {
                         list += Article(
                             result.getInt("id"),
                             result.getString("title"),
-                            null,
+                            result.getString("text"),
                             null
                         )
                     }

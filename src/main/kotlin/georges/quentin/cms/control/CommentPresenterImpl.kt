@@ -1,9 +1,9 @@
 package georges.quentin.cms.control
 
-import georges.quentin.cms.CommentController
+import georges.quentin.cms.CommentPresenter
 import georges.quentin.cms.Model
 
-class CommentControllerImpl(val model: Model, val view: CommentController.View): CommentController {
+class CommentPresenterImpl(val model: Model, val view: CommentPresenter.View): CommentPresenter {
     override fun createComment(content: String?, articleId: Int) {
         if (content != "") {
             val comment = model.createComment(content, articleId)

@@ -2,7 +2,7 @@ package georges.quentin.cms
 
 import georges.quentin.cms.model.User
 
-interface AuthController {
+interface AuthPresenter {
      fun login(mail: String?, password: String?)
 
     interface View {

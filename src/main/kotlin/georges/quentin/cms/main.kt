@@ -72,7 +72,7 @@ fun main() {
                 val password = requestBody["password"]
                 val endSession = System.currentTimeMillis() + 600000;
 
-                val controller =appComponents.login(object: AuthController.View {
+                val controller =appComponents.login(object: AuthPresenter.View {
                     override fun success(user: User) {
                         launch {
                             call.sessions.set(AuthSession(user.mail, endSession))
@@ -108,7 +108,7 @@ fun main() {
                 val title = requestBody["title"]
                 val content = requestBody["content"]
 
-                val controller = appComponents.getArticleController(object: ArticleController.View {
+                val controller = appComponents.getArticlePresenter(object: ArticlePresenter.View {
                     override fun success() {
                         launch {
                             call.respondRedirect("/")
@@ -121,13 +121,15 @@ fun main() {
                         }
                     }
 
+                    override fun displayArticle(article: Article?) {}
+                    override fun displayNotFound() {}
                 })
 
                 controller.createArticle(title, content)
             }
 
             get("/admin/article/del/{id}") {
-                val controller = appComponents.getArticleController(object: ArticleController.View {
+                val controller = appComponents.getArticlePresenter(object: ArticlePresenter.View {
                     override fun success() {
                         launch {
                             call.respondRedirect("/")
@@ -139,6 +141,9 @@ fun main() {
                             call.respondText("Something wrong happened")
                         }
                     }
+
+                    override fun displayArticle(article: Article?) {}
+                    override fun displayNotFound() {}
                 })
 
                 val id = call.parameters["id"]!!.toInt()
@@ -147,6 +152,9 @@ fun main() {
 
             get("article/{id}") {
                 val controller = appComponents.getArticlePresenter(object: ArticlePresenter.View {
+                    override fun success() {}
+                    override fun error() {}
+
                     override fun displayNotFound() {
                         launch {
                             call.respond(HttpStatusCode.NotFound)
@@ -173,7 +181,7 @@ fun main() {
                 val text = requestBody["text"]
                 val articleId = requestBody["article_id"]
 
-                val controller = appComponents.getCommentController(object: CommentController.View {
+                val controller = appComponents.getCommentController(object: CommentPresenter.View {
                     override fun error() {
                         launch {
                             call.respondText("Something wrong happened")
@@ -194,7 +202,7 @@ fun main() {
                 val articleId = call.parameters["article_id"]!!.toInt()
                 val id = call.parameters["comment_id"]!!.toInt()
 
-                val controller = appComponents.getCommentController(object: CommentController.View {
+                val controller = appComponents.getCommentController(object: CommentPresenter.View {
                     override fun success() {
                         launch {
                             call.respondRedirect("/article/${articleId}")
