@@ -21,7 +21,8 @@ class ArticleControllerImpl(val model: Model, val view: ArticleController.View):
             } else {
                 view.error()
             }
+        } else {
+            view.error()
         }
-
     }
 }

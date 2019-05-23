@@ -155,7 +155,11 @@ fun main() {
 
                     override fun displayArticle(article: Article?) {
                         launch {
-                            call.respond(FreeMarkerContent("article.ftl", article, "e"))
+                            if(call.sessions.get<AuthSession>() != null) {
+                                call.respond(FreeMarkerContent("admin/article_admin.ftl", article, "e"))
+                            } else {
+                                call.respond(FreeMarkerContent("article.ftl", article, "e"))
+                            }
                         }
                     }
                 })
@@ -169,7 +173,7 @@ fun main() {
                 val text = requestBody["text"]
                 val articleId = requestBody["article_id"]
 
-                val controller = appComponents.createComment(object: CommentController.View {
+                val controller = appComponents.getCommentController(object: CommentController.View {
                     override fun error() {
                         launch {
                             call.respondText("Something wrong happened")
@@ -184,6 +188,26 @@ fun main() {
                 })
 
                 controller.createComment(text, articleId!!.toInt())
+            }
+
+            get("/admin/comment/del/{comment_id}/{article_id}") {
+                val articleId = call.parameters["article_id"]!!.toInt()
+                val id = call.parameters["comment_id"]!!.toInt()
+
+                val controller = appComponents.getCommentController(object: CommentController.View {
+                    override fun success() {
+                        launch {
+                            call.respondRedirect("/article/${articleId}")
+                        }
+                    }
+
+                    override fun error() {
+                        launch {
+                            call.respondText("Something wrong happened")
+                        }
+                    }
+                })
+                controller.deleteComment(id)
             }
         }
     }.start(wait = true)

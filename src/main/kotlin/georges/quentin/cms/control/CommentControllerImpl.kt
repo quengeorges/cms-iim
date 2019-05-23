@@ -17,4 +17,12 @@ class CommentControllerImpl(val model: Model, val view: CommentController.View):
         }
     }
 
+    override fun deleteComment(id: Int) {
+        val deleteStatus = model.deleteComment(id)
+        if(deleteStatus) {
+            view.success()
+        } else {
+            view.error()
+        }
+    }
 }

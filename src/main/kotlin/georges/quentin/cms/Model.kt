@@ -19,4 +19,6 @@ interface Model {
     fun deleteArticle(id: Int): Boolean
 
     fun createArticle(title: String, content: String): Boolean
+
+    fun deleteComment(id: Int): Boolean
 }

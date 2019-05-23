@@ -24,7 +24,7 @@ class AppComponents(val mySqlUrl: String, val mySqlUser: String, val mySqlPasswo
         return ArticlePresenterImpl(getModel(), view)
     }
 
-    fun createComment(view: CommentController.View): CommentController {
+    fun getCommentController(view: CommentController.View): CommentController {
         return CommentControllerImpl(getModel(), view)
     }
 
