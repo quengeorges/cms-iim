@@ -7,8 +7,12 @@
 
 <#macro navbar>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/login">Login</a>
+                <#if connect>
+                    <a class="btn btn-primary col col-3 align-self-end" href="/logout">Logout</a>
+                <#else>
+                    <a class="btn btn-primary col col-3 align-self-end" href="/login">Login</a>
+                </#if>
+            </div>
         </div>
     </nav>
 </#macro>
@@ -24,7 +28,9 @@
     </head>
     <body>
         <@navbar/>
-        <@page_body/>
+        <div class="px-2">
+            <@page_body/>
+        </div>
     </body>
     </html>
 </#macro>

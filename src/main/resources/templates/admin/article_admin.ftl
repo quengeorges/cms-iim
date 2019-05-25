@@ -4,11 +4,11 @@
 </#macro>
 
 <#macro page_body>
-    <h1 class="my-lg-5 text-center">${title}</h1>
-    <p class="text-center">${text}</p>
+    <h1 class="my-lg-5 text-center">${article.title}</h1>
+    <p class="text-center">${article.text}</p>
 
     <ul>
-        <#list comments as comment>
+        <#list article.comments as comment>
             <li class="my-lg-2 px-5">
                 <div class="card">
                     <div class="card-body">

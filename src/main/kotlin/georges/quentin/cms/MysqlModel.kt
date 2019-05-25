@@ -124,7 +124,6 @@ class MysqlModel(val pool: ConnectionPool) : Model {
     }
 
     override fun deleteComment(id: Int): Boolean {
-        print(id)
         pool.useConnection { connection ->
             connection.prepareStatement("DELETE FROM commentaire WHERE id = ?").use { stmt ->
                 stmt.setInt(1, id)

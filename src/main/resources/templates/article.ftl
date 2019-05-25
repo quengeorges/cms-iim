@@ -4,8 +4,8 @@
 </#macro>
 
 <#macro page_body>
-    <h1 class="my-lg-5 text-center">${title}</h1>
-    <p class="text-center">${text}</p>
+    <h1 class="my-lg-5 text-center">${article.title}</h1>
+    <p class="text-center">${article.text}</p>
 
     <div class="px-lg-5">
         <div class="card p-lg-5">
@@ -14,12 +14,12 @@
                     <label for="textAreaContent">Commentaire :</label>
                     <textarea class="form-control" id="textAreaContent" rows="10" cols="30" name="text" ></textarea>
                 </div>
-                <input type="hidden" value="${id}" name="article_id">
+                <input type="hidden" value="${article.id}" name="article_id">
                 <button type="submit" class="btn btn-primary">Commenter</button>
             </form>
 
             <ul>
-                <#list comments as comment>
+                <#list article.comments as comment>
                     <div class="card my-lg-2">
                         <div class="card-body">
                             <p class="card-text">${comment.content}</p>

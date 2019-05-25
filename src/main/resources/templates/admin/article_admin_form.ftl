@@ -9,7 +9,7 @@
     <form action="/admin/article/add" method="post" class="col-lg-6">
         <div class="form-group">
             <label for="inputTitre">Titre de l'article</label>
-            <input type="text" class="form-control" id="inputTitre" placeholder="Entrer le titre">
+            <input type="text" class="form-control" id="inputTitre" name="title" placeholder="Entrer le titre">
         </div>
         <div class="form-group">
             <label for="textAreaContent">Contenu de l'article</label>

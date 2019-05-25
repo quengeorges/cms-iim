@@ -13,7 +13,7 @@
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title">${article.title}</h5>
-                        <p>${article.text}</p>
+                        <p class="card-text">${(article.text?length < 26 )?then(article.text, article.text?substring(0,26) + "...")}</p>
                         <div>
                             <a href="/article/${article.id}" class="btn btn-primary">Lire</a>
                             <a href="/admin/article/del/${article.id}" class="btn btn-warning">Supprimer</a>

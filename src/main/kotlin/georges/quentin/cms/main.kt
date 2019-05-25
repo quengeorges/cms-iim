@@ -1,9 +1,12 @@
 package georges.quentin.cms
 
+import com.typesafe.config.ConfigFactory
 import freemarker.cache.ClassTemplateLoader
 import georges.quentin.cms.model.Article
 import georges.quentin.cms.model.AuthSession
 import georges.quentin.cms.model.User
+import georges.quentin.cms.tpl.ArticleContext
+import georges.quentin.cms.tpl.ConnectContext
 import georges.quentin.cms.tpl.IndexContext
 import io.ktor.application.call
 import io.ktor.application.install
@@ -28,7 +31,13 @@ class App
 
 fun main() {
 
-    val appComponents = AppComponents("jdbc:mysql://localhost/CMS?serverTimezone=UTC", "root", "root")
+    val config = ConfigFactory.load()
+
+    val appComponents = AppComponents(
+        config.getString("application.bdd.uri"),
+        config.getString("application.bdd.username"),
+        config.getString("application.bdd.password")
+    )
 
     embeddedServer(Netty, 8080) {
 
@@ -50,9 +59,10 @@ fun main() {
             get("/") {
                 val controller = appComponents.getArticleListPresenter(object: ArticleListPresenter.View {
                     override fun dispalyArticleList(list: List<Article>) {
-                        val context = IndexContext(list)
+                        val connect = call.sessions.get<AuthSession>() != null
+                        val context = IndexContext(list, connect)
                         launch {
-                            if (call.sessions.get<AuthSession>() != null) {
+                            if (connect) {
                                 call.respond(FreeMarkerContent("admin/index_admin.ftl", context, "e"))
                             } else {
                                 call.respond(FreeMarkerContent("index.ftl", context, "e"))
@@ -64,8 +74,10 @@ fun main() {
             }
 
             get("/login") {
-                call.respond(FreeMarkerContent("login.ftl", null, "e"))
+                val connect = call.sessions.get<AuthSession>() != null
+                call.respond(FreeMarkerContent("login.ftl", ConnectContext(connect), "e"))
             }
+
             post("/login") {
                 val requestBody = call.receiveParameters()
                 val mail = requestBody["mail"]
@@ -100,7 +112,8 @@ fun main() {
             }
 
             get("/admin/article/form") {
-                call.respond(FreeMarkerContent("admin/article_admin_form.ftl", null, "e"))
+                val connect = call.sessions.get<AuthSession>() != null
+                call.respond(FreeMarkerContent("admin/article_admin_form.ftl", ConnectContext(connect), "e"))
             }
 
             post("/admin/article/add") {
@@ -162,11 +175,13 @@ fun main() {
                     }
 
                     override fun displayArticle(article: Article?) {
+                        val connect = call.sessions.get<AuthSession>() != null
+                        val context = ArticleContext(article, connect)
                         launch {
                             if(call.sessions.get<AuthSession>() != null) {
-                                call.respond(FreeMarkerContent("admin/article_admin.ftl", article, "e"))
+                                call.respond(FreeMarkerContent("admin/article_admin.ftl", context, "e"))
                             } else {
-                                call.respond(FreeMarkerContent("article.ftl", article, "e"))
+                                call.respond(FreeMarkerContent("article.ftl", context, "e"))
                             }
                         }
                     }
